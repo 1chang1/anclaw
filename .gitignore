@@ -1,0 +1,10 @@
+# 서브 프로젝트 (독립 git repo)
+anclaw-app/
+anclaw-web/
+anclaw-landing/
+anclaw-config/
+anclaw-relay/
+anclaw-design/
+
+# OS
+.DS_Store
