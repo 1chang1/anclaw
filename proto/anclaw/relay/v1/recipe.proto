@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package anclaw.relay.v1;
+
+import "anclaw/relay/v1/common.proto";
+
+// RecipeListRequestPayload requests the list of app automation recipes.
+message RecipeListRequestPayload {}
+
+// RecipeListResponsePayload returns all recipes.
+message RecipeListResponsePayload {
+  repeated RecipeInfo recipes = 1;
+}
+
+// RecipeDeletePayload deletes a recipe.
+message RecipeDeletePayload {
+  int64 recipe_id = 1;
+}

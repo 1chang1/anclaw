@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package anclaw.relay.v1;
+
+import "google/protobuf/struct.proto";
+
+// Envelope wraps every WebSocket message.
+// Relay passes payload through without parsing (transparent proxy).
+message Envelope {
+  string type = 1;                     // snake_case message type string ("user_message", etc.)
+  string id = 2;                       // UUID
+  int64 ts = 3;                        // Unix milliseconds
+  google.protobuf.Struct payload = 4;  // type-specific payload (Relay passes through)
+}
+
+// MessageType enumerates all known message types for validation.
+// Wire format uses the string value, not the numeric enum.
+enum MessageType {
+  MESSAGE_TYPE_UNSPECIFIED = 0;
+
+  // Browser -> Device: chat
+  MESSAGE_TYPE_USER_MESSAGE = 1;
+  MESSAGE_TYPE_HISTORY_REQUEST = 2;
+  MESSAGE_TYPE_CONVERSATION_LIST = 3;
+  MESSAGE_TYPE_REGENERATE = 4;
+  MESSAGE_TYPE_EDIT_MESSAGE = 5;
+  MESSAGE_TYPE_CONVERSATION_RENAME = 6;
+  MESSAGE_TYPE_CONVERSATION_DELETE = 7;
+
+  // Device -> Browser: chat streaming
+  MESSAGE_TYPE_TEXT_DELTA = 10;
+  MESSAGE_TYPE_THINKING_DELTA = 11;
+  MESSAGE_TYPE_TOOL_START = 12;
+  MESSAGE_TYPE_TOOL_COMPLETE = 13;
+  MESSAGE_TYPE_TOOL_ACTION_STEP = 14;
+  MESSAGE_TYPE_MESSAGE_COMPLETE = 15;
+
+  // Browser -> Device: tool control
+  MESSAGE_TYPE_TOOL_STOP = 20;
+
+  // Device -> Browser: conversation events
+  MESSAGE_TYPE_HISTORY_RESPONSE = 30;
+  MESSAGE_TYPE_CONVERSATION_LIST_RX = 31;
+  MESSAGE_TYPE_CONVERSATION_TITLE_UPDATED = 32;
+  MESSAGE_TYPE_CONVERSATION_DELETED = 33;
+
+  // Device info
+  MESSAGE_TYPE_DEVICE_INFO_REQUEST = 40;
+  MESSAGE_TYPE_DEVICE_INFO_RESPONSE = 41;
+  MESSAGE_TYPE_DEVICE_STATUS = 42;
+  MESSAGE_TYPE_STATUS_UPDATE = 43;
+  MESSAGE_TYPE_SCREEN_FRAME = 44;
+
+  // Engine
+  MESSAGE_TYPE_ENGINE_LIST_REQUEST = 50;
+  MESSAGE_TYPE_ENGINE_LIST_RESPONSE = 51;
+  MESSAGE_TYPE_ENGINE_SWITCH = 52;
+
+  // User interaction
+  MESSAGE_TYPE_ASK_USER = 60;
+  MESSAGE_TYPE_USER_ANSWER = 61;
+  MESSAGE_TYPE_AUTONOMY_LEVEL_SET = 62;
+
+  // Schedule
+  MESSAGE_TYPE_SCHEDULE_LIST_REQUEST = 70;
+  MESSAGE_TYPE_SCHEDULE_LIST_RESPONSE = 71;
+  MESSAGE_TYPE_SCHEDULE_PAUSE = 72;
+  MESSAGE_TYPE_SCHEDULE_RESUME = 73;
+  MESSAGE_TYPE_SCHEDULE_DELETE = 74;
+
+  // Skill
+  MESSAGE_TYPE_SKILL_LIST_REQUEST = 80;
+  MESSAGE_TYPE_SKILL_LIST_RESPONSE = 81;
+
+  // Settings
+  MESSAGE_TYPE_SETTINGS_GET_REQUEST = 90;
+  MESSAGE_TYPE_SETTINGS_GET_RESPONSE = 91;
+  MESSAGE_TYPE_SETTINGS_UPDATE = 92;
+  MESSAGE_TYPE_SETTINGS_UPDATE_ACK = 93;
+
+  // Memory
+  MESSAGE_TYPE_MEMORY_LIST_REQUEST = 100;
+  MESSAGE_TYPE_MEMORY_LIST_RESPONSE = 101;
+  MESSAGE_TYPE_MEMORY_CREATE = 102;
+  MESSAGE_TYPE_MEMORY_DELETE = 103;
+
+  // Recipe
+  MESSAGE_TYPE_RECIPE_LIST_REQUEST = 110;
+  MESSAGE_TYPE_RECIPE_LIST_RESPONSE = 111;
+  MESSAGE_TYPE_RECIPE_DELETE = 112;
+
+  // Notification
+  MESSAGE_TYPE_NOTIFICATION = 120;
+
+  // Bidirectional
+  MESSAGE_TYPE_PING = 200;
+  MESSAGE_TYPE_PONG = 201;
+  MESSAGE_TYPE_ERROR = 202;
+  MESSAGE_TYPE_TOKEN_REFRESH = 203;
+}

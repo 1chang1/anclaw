@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package anclaw.relay.v1;
+
+import "anclaw/relay/v1/common.proto";
+
+// EngineListRequestPayload requests the list of available engines.
+message EngineListRequestPayload {}
+
+// EngineListResponsePayload returns available engines and the active one.
+message EngineListResponsePayload {
+  repeated EngineInfo engines = 1;
+  string active_id = 2;
+}
+
+// EngineSwitchPayload switches the active engine.
+message EngineSwitchPayload {
+  string engine_id = 1;
+}

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package anclaw.relay.v1;
+
+import "anclaw/relay/v1/common.proto";
+
+// MemoryListRequestPayload requests the list of stored memories.
+message MemoryListRequestPayload {}
+
+// MemoryListResponsePayload returns all stored memories.
+message MemoryListResponsePayload {
+  repeated MemoryInfo memories = 1;
+}
+
+// MemoryCreatePayload creates a new memory entry.
+message MemoryCreatePayload {
+  string content = 1;
+  string source = 2;    // "user" | "web" | "auto"
+}
+
+// MemoryDeletePayload deletes a memory entry.
+// Type unified: Kotlin Long -> string.
+message MemoryDeletePayload {
+  string memory_id = 1;
+}

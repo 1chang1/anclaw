@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package anclaw.relay.v1;
+
+// NotificationPayload delivers a push notification to the browser.
+message NotificationPayload {
+  string notif_type = 1;    // "info" | "success" | "warning" | "error"
+  string title = 2;
+  string message = 3;
+  optional string related_id = 4;
+}

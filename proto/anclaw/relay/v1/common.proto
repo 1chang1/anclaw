@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package anclaw.relay.v1;
+
+// EngineInfo describes an available LLM engine.
+message EngineInfo {
+  string id = 1;
+  string name = 2;
+  string type = 3;     // "api" | "local" | "custom"
+  string model = 4;
+  string status = 5;   // "ready" | "loading" | "error"
+}
+
+// ScheduleInfo describes a scheduled job.
+message ScheduleInfo {
+  string id = 1;
+  string name = 2;
+  string cron_expression = 3;
+  string next_run = 4;
+  string last_status = 5;   // "success" | "failed" | "pending"
+  bool is_paused = 6;
+}
+
+// SkillInfo describes an installed skill.
+message SkillInfo {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  repeated string tags = 4;
+  int32 use_count = 5;
+}
+
+// MemoryInfo describes a stored AI memory entry.
+message MemoryInfo {
+  string id = 1;
+  string content = 2;
+  string source = 3;
+  string created_at = 4;
+}
+
+// RecipeInfo describes an app automation recipe.
+message RecipeInfo {
+  int64 id = 1;
+  string package_name = 2;
+  string app_name = 3;
+  string task_description = 4;
+  string recipe = 5;
+  int32 usage_count = 6;
+  int32 success_count = 7;
+  int32 failure_count = 8;
+  optional int64 last_used_at = 9;
+  int64 created_at = 10;
+}
+
+// ConversationSummary is a brief overview of a conversation.
+message ConversationSummary {
+  string id = 1;
+  string title = 2;
+  int64 updated_at = 3;
+  int64 created_at = 4;
+  int32 message_count = 5;
+}
+
+// HistoryMessage is a single message within a conversation history.
+message HistoryMessage {
+  string id = 1;
+  string role = 2;       // "user" | "assistant" | "system"
+  string content = 3;
+  int64 timestamp = 4;
+}

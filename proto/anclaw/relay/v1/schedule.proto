@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package anclaw.relay.v1;
+
+import "anclaw/relay/v1/common.proto";
+
+// ScheduleListRequestPayload requests the list of schedules.
+message ScheduleListRequestPayload {}
+
+// ScheduleListResponsePayload returns all schedules.
+message ScheduleListResponsePayload {
+  repeated ScheduleInfo schedules = 1;
+}
+
+// SchedulePausePayload pauses a schedule.
+message SchedulePausePayload {
+  string schedule_id = 1;
+}
+
+// ScheduleResumePayload resumes a paused schedule.
+message ScheduleResumePayload {
+  string schedule_id = 1;
+}
+
+// ScheduleDeletePayload deletes a schedule.
+message ScheduleDeletePayload {
+  string schedule_id = 1;
+}

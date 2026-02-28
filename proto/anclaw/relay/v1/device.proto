@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package anclaw.relay.v1;
+
+// DeviceInfoRequestPayload requests detailed device information.
+message DeviceInfoRequestPayload {}
+
+// DeviceInfoResponsePayload returns detailed device information.
+// Merged from Go (core fields) + Web (ram, cpu, network fields).
+message DeviceInfoResponsePayload {
+  string model = 1;
+  string android_version = 2;
+  int32 battery_pct = 3;
+  bool is_charging = 4;
+  int64 storage_used_mb = 5;
+  int64 storage_total_mb = 6;
+  int64 uptime_seconds = 7;
+  string active_engine = 8;
+  bool proot_installed = 9;
+  optional int64 ram_used_mb = 10;
+  optional int64 ram_total_mb = 11;
+  optional double cpu_usage = 12;
+  optional string network_type = 13;
+  optional string ip_address = 14;
+}
+
+// DeviceStatusPayload reports device connectivity and state.
+// Merged from Go (online, model_name, battery_pct) + Kotlin (device_id, engine_name, is_ready).
+message DeviceStatusPayload {
+  bool online = 1;
+  string device_id = 2;
+  string model_name = 3;
+  string engine_name = 4;
+  int32 battery_pct = 5;
+  bool is_ready = 6;
+}
+
+// StatusUpdatePayload is a lightweight device status broadcast.
+message StatusUpdatePayload {
+  bool online = 1;
+  string model_name = 2;
+  int32 battery_pct = 3;
+}
+
+// ScreenFramePayload carries a screen capture frame (base64 encoded).
+message ScreenFramePayload {
+  string data = 1;     // base64 encoded image
+  int32 width = 2;
+  int32 height = 3;
+}
+
+// AutonomyLevelSetPayload sets the agent's autonomy level.
+message AutonomyLevelSetPayload {
+  string level = 1;    // "autonomous" | "supervised" | "manual"
+}

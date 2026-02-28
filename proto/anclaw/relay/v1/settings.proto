@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package anclaw.relay.v1;
+
+import "google/protobuf/struct.proto";
+
+// SettingsGetRequestPayload requests current settings.
+message SettingsGetRequestPayload {}
+
+// SettingsGetResponsePayload returns all settings as a JSON-compatible map.
+message SettingsGetResponsePayload {
+  google.protobuf.Struct settings = 1;
+}
+
+// SettingsUpdatePayload updates a single setting.
+message SettingsUpdatePayload {
+  string key = 1;
+  google.protobuf.Value value = 2;
+}
+
+// SettingsUpdateAckPayload acknowledges a settings update.
+// Field name unified: Kotlin "ok" -> "success".
+message SettingsUpdateAckPayload {
+  string key = 1;
+  bool success = 2;
+}

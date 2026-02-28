@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package anclaw.relay.v1;
+
+import "anclaw/relay/v1/common.proto";
+
+// SkillListRequestPayload requests the list of installed skills.
+message SkillListRequestPayload {}
+
+// SkillListResponsePayload returns all installed skills.
+message SkillListResponsePayload {
+  repeated SkillInfo skills = 1;
+}

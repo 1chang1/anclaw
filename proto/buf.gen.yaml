@@ -1,0 +1,21 @@
+version: v2
+managed:
+  enabled: true
+  override:
+    - file_option: go_package
+      value: github.com/limitcone/anclaw-relay/gen/relayv1;relayv1
+    - file_option: java_package
+      value: ai.anclaw.agent.proto.relay.v1
+    - file_option: java_multiple_files
+      value: true
+plugins:
+  - remote: buf.build/protocolbuffers/go
+    out: gen/go
+    opt: paths=source_relative
+  - remote: buf.build/protocolbuffers/java
+    out: gen/kotlin
+  - remote: buf.build/protocolbuffers/kotlin
+    out: gen/kotlin
+  - remote: buf.build/bufbuild/es
+    out: gen/ts
+    opt: target=ts

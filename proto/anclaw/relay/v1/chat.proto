@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package anclaw.relay.v1;
+
+import "google/protobuf/struct.proto";
+import "anclaw/relay/v1/common.proto";
+
+// === Browser -> Device ===
+
+// UserMessagePayload sends a user message to the device.
+message UserMessagePayload {
+  string conversation_id = 1;
+  string text = 2;
+}
+
+// HistoryRequestPayload requests conversation history.
+message HistoryRequestPayload {
+  string conversation_id = 1;
+  int32 limit = 2;   // default 50
+}
+
+// ConversationListRequestPayload requests the list of conversations.
+// Empty payload — just the envelope type triggers the action.
+message ConversationListRequestPayload {}
+
+// RegeneratePayload requests regeneration of the last assistant response.
+message RegeneratePayload {
+  string conversation_id = 1;
+}
+
+// EditMessagePayload edits an existing message.
+message EditMessagePayload {
+  string conversation_id = 1;
+  string message_id = 2;
+  string new_text = 3;
+}
+
+// ConversationRenamePayload renames a conversation.
+message ConversationRenamePayload {
+  string conversation_id = 1;
+  string title = 2;
+}
+
+// ConversationDeletePayload deletes a conversation.
+message ConversationDeletePayload {
+  string conversation_id = 1;
+}
+
+// ToolStopPayload cancels the current tool-calling loop.
+message ToolStopPayload {
+  string conversation_id = 1;
+}
+
+// === Device -> Browser ===
+
+// TextDeltaPayload is a streaming text chunk from the assistant.
+message TextDeltaPayload {
+  string conversation_id = 1;
+  string delta = 2;
+}
+
+// ThinkingDeltaPayload is a streaming thinking chunk from the assistant.
+message ThinkingDeltaPayload {
+  string conversation_id = 1;
+  string delta = 2;
+}
+
+// ToolStartPayload signals the start of a tool call.
+message ToolStartPayload {
+  string conversation_id = 1;
+  string tool_name = 2;
+  string tool_use_id = 3;
+  google.protobuf.Value tool_input = 4;  // arbitrary JSON
+}
+
+// ToolCompletePayload signals completion of a tool call.
+message ToolCompletePayload {
+  string conversation_id = 1;
+  string tool_name = 2;
+  string tool_use_id = 3;
+  string output = 4;
+  bool is_error = 5;
+}
+
+// ToolActionStepPayload is an intermediate action step during tool execution.
+message ToolActionStepPayload {
+  string conversation_id = 1;
+  string tool_use_id = 2;
+  string action = 3;
+  string target = 4;
+  int64 timestamp = 5;
+}
+
+// MessageCompletePayload signals the end of an assistant turn.
+// Merged fields from Go (conversation_id) + Kotlin (content, tokens) + Web (suggestions).
+message MessageCompletePayload {
+  string conversation_id = 1;
+  string content = 2;
+  optional int32 input_tokens = 3;
+  optional int32 output_tokens = 4;
+  repeated string suggestions = 5;
+}
+
+// HistoryResponsePayload returns conversation history.
+message HistoryResponsePayload {
+  string conversation_id = 1;
+  repeated HistoryMessage messages = 2;
+}
+
+// ConversationListResponsePayload returns the list of conversations.
+message ConversationListResponsePayload {
+  repeated ConversationSummary conversations = 1;
+}
+
+// ConversationTitleUpdatedPayload notifies that a conversation was renamed.
+message ConversationTitleUpdatedPayload {
+  string conversation_id = 1;
+  string title = 2;
+}
+
+// ConversationDeletedPayload notifies that a conversation was deleted.
+message ConversationDeletedPayload {
+  string conversation_id = 1;
+}
+
+// AskUserPayload presents a question to the user.
+message AskUserPayload {
+  string question_id = 1;
+  string question = 2;
+  string type = 3;       // "confirm" | "choice" | "multi_choice" | "text"
+  repeated string options = 4;
+  string default_value = 5;
+}
+
+// UserAnswerPayload is the user's answer to an AskUser question.
+message UserAnswerPayload {
+  string question_id = 1;
+  string answer = 2;
+}
+
+// ErrorPayload carries an error response.
+message ErrorPayload {
+  string code = 1;
+  string message = 2;
+}
