@@ -4,7 +4,8 @@
 
 ## Overview
 
-제품 소개 랜딩 페이지 (anclaw.ai). Cloudflare Pages에 배포 완료.
+PMF fake test용 범용 랜딩 페이지 (anclaw.ai). Cloudflare Pages에 배포.
+핵심 메시지: "앱을 직접 사용하는 AI Agent"
 
 ## Tech Stack
 
@@ -16,6 +17,8 @@ Font:            Pretendard (Korean/Latin)
 i18n:            Custom Astro routing (/ko/, /en/)
 Deploy:          Cloudflare Pages + Wrangler CLI
 OG Images:       Satori + Resvg (빌드 타임 생성)
+DB:              Cloudflare D1 (waitlist)
+Bot Protection:  Cloudflare Turnstile
 ```
 
 ## Build Commands
@@ -28,22 +31,62 @@ npm run preview       # Preview built site
 npm run generate:og   # Generate OG images
 ```
 
-## Architecture
+## Page Structure
 
-- `.astro` 파일 = 정적 HTML (빌드 시 0 JS)
-- `.tsx` 파일 = React islands (`client:load` / `client:visible`)
-- i18n: 타입 세이프 번역 시스템 (`src/i18n/`)
-- 다크 모드: 인라인 스크립트 (FOUC 방지)
+```
+Header (sticky CTA 버튼 — 스크롤 시 표시)
+├─ 1. Hero          — "앱을 직접 사용하는 AI Agent" + PhoneVisual 3단계 애니메이션
+├─ 2. Use Cases     — 4가지 사용 사례 (자동화 / QA / 모니터링 / 조건부 매매)
+├─ 3. How It Works  — 3단계 (설치 → 지시 → 결과)
+├─ 4. Comparison    — 6열 비교 (수작업/Gemini/Zapier/OpenClaw/Appium/Anclaw)
+├─ 5. FAQ           — 5개 질문
+└─ 6. CTA           — 이메일 + 용도 설문 + UTM 캡처 + waitlist 카운터
+Footer
+```
 
 ## Key Paths
 
 ```
 src/pages/ko/index.astro      # 한국어 랜딩
 src/pages/en/index.astro      # 영어 랜딩
-src/i18n/                     # 번역 파일
-src/components/               # 컴포넌트 (hero, features 등)
-src/layouts/BaseLayout.astro  # HTML shell
+src/i18n/                     # 번역 파일 (types.ts, ko.ts, en.ts)
+src/components/
+  hero/                       # HeroSection, HeroContent, PhoneVisual
+  usecases/                   # UseCasesSection, UseCaseCards
+  howitworks/                 # HowItWorksSection, Steps
+  comparison/                 # ComparisonSection, ComparisonTable (7열)
+  faq/                        # FAQSection, FAQAccordion
+  cta/                        # CTASection, CTAContent (설문 + UTM + 카운터)
+  common/                     # Header (sticky CTA), Footer, NavLinks
+src/layouts/BaseLayout.astro  # HTML shell + JSON-LD
 src/styles/global.css         # Tailwind + 브랜딩
+functions/api/
+  waitlist.ts                 # POST — 이메일 + 설문 + UTM 저장
+  waitlist-count.ts           # GET — waitlist 카운트 반환
+scripts/generate-og.ts        # OG 이미지 생성
+```
+
+## UTM Tracking
+
+1. 랜딩 로드 시 URL에서 UTM 파싱 → sessionStorage 저장
+2. CTA 폼 제출 시 sessionStorage UTM 값 함께 전송
+3. D1 waitlist 테이블에 저장 (use_case, utm_source, utm_medium, utm_campaign, utm_content)
+4. 광고 URL: `anclaw.ai/ko/?utm_source=google&utm_medium=cpc&utm_campaign=automation`
+
+## D1 Schema
+
+```sql
+-- 기존 + 신규 컬럼
+CREATE TABLE waitlist (
+  email TEXT PRIMARY KEY,
+  locale TEXT,
+  use_case TEXT,
+  utm_source TEXT,
+  utm_medium TEXT,
+  utm_campaign TEXT,
+  utm_content TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
 ## Repository

@@ -2,12 +2,12 @@
 
 ## Core Concept
 
-**"서랍 속 안 쓰는 안드로이드 폰 → 24/7 개인 AI 에이전트 서버"**
+**"앱을 직접 사용하는 AI Agent"**
 
-- 하드웨어 비용 0원 (기존 폰 활용)
-- 비개발자도 앱 설치 한 번으로 AI 비서 구축
-- Relay 서버(WebSocket) 통해 어디서든 접속
-- 로컬 LLM으로 완전 무료 사용 가능
+- API 없는 앱도 화면을 보고 직접 조작 (Accessibility Service + proot + WebView)
+- 자연어로 지시하면 AI가 앱에서 실행
+- 안드로이드 폰에서 24/7 무인 실행
+- 코딩 불필요, 5분 셋업
 
 ## Branding
 
@@ -17,13 +17,14 @@
 
 ## Competitive Positioning
 
-**vs OpenClaw (PC 기반):** Docker만 불가, 나머지 동등. 하드웨어 비용 0원, 설치 난이도 "앱 한 번", 타겟 "누구나".
-
-**vs ChatGPT/Claude 앱:** 실제 파일 생성/전달, 웹 크롤링, 로컬 코드 실행, 스킬 자동 생성, 스케줄링, 24/7 백그라운드, 무료(로컬 LLM) — 모두 Anclaw만 가능.
+**vs Gemini:** 구글 자체 앱 3개만 제어. Anclaw는 모든 앱.
+**vs Zapier/Make:** API 있는 서비스만. Anclaw는 API 불필요.
+**vs OpenClaw (PC 기반):** PC + Docker 필수. Anclaw는 앱 설치 한 번.
+**vs Appium:** 코딩 필수, QA 전용. Anclaw는 자연어, 범용.
 
 ## Revenue Model
 
-절대 건드리면 안 되는 것: 앱 유료화, 로컬 LLM 기능 제한, 광고.
+절대 건드리면 안 되는 것: 앱 유료화, 광고.
 
 | 우선순위 | 모델 | 설명 |
 |---------|------|------|
